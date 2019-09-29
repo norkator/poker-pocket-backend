@@ -1,3 +1,8 @@
+/**
+ * Core logic for Texas Hold'em room game
+ * this file may be renamed in future when other game types are implemented
+ */
+
 const config = require('../config');
 const dbUtils = require('../database/dbUtils');
 const utils = require('./utils');

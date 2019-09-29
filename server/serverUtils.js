@@ -1,7 +1,6 @@
 const fs = require('fs');
 const config = require('../config');
 
-/* its a change */
 
 /**
  * Get web socket server options

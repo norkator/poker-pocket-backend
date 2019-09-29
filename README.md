@@ -11,8 +11,12 @@ You are NOT allowed to copy this back end and make your own game.
 Reason I shared this code here (see license) is that I want to <b>find someone who wants to 
 create Virtual Reality front end</b> with Unity or any other game development platform.
 If that is you? you can contact me via email at: nitramite@outlook.com
+so that we can discuss our deal, it's okay that who ever does it owns that vr front end 
+and also promotes my non VR versions. This way we both MAY be able to make buck out of this. 
+That's the goal. Would be super awesome to work with someone together.
 
-I currently have two different front end clients.
+I currently have two different front end clients. You may want to take a look at them to 
+see what it's all about.
 
 Web UI: https://pokerpocket.nitramite.com/  
 Android client: https://play.google.com/store/apps/details?id=com.nitramite.pokerpocket
