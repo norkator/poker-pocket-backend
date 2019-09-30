@@ -168,7 +168,8 @@ function messageHandler(input) {
 
 
 function onRequestRooms(playerName, connectionId, socketKey, roomId, roomSortParam) {
-  if (roomId === -1) {
+  logger.log('Get room req; ' + playerName + ' ' + connectionId + ' ' + socketKey + ' ' + roomId + ' ' + roomSortParam, logger.LOG_UNDERSCORE);
+  if (Number(roomId) === -1) {
     if (players[connectionId].socketKey === socketKey) {
       // New player
       if (!players[connectionId].isLoggedInPlayer()) {
@@ -206,6 +207,8 @@ function onRequestRooms(playerName, connectionId, socketKey, roomId, roomSortPar
       logger.log("Sending... " + JSON.stringify(responseArray));
       players[connectionId].connection.sendText(JSON.stringify(responseArray));
       cleanResponseArray();
+    } else {
+      logger.log('Socket key no match!', logger.LOG_UNDERSCORE);
     }
   }
 }
