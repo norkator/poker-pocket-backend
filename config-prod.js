@@ -22,6 +22,7 @@ exports = module.exports = {
     roomZeroBotCount: 3,
     roomOneBotCount: 1,
     roomTwoBotCount: 4,
+    roomOthersBotCount: 0,      // For production set to 0
   },
   neuralNetwork: {
     learningRate: 0.3
