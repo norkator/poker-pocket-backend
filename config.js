@@ -19,7 +19,7 @@ exports = module.exports = {
   common: {
     startGameTimeOut: 3000,     // 2000 stock
     startingRooms: 1,          // Default 4, How many rooms to create at start
-    roomZeroBotCount: 2,
+    roomZeroBotCount: 5,
     roomOneBotCount: 2,
     roomTwoBotCount: 2,
     roomOthersBotCount: 0,      // For production set to 0
@@ -30,6 +30,7 @@ exports = module.exports = {
   games: {
     holdEm: {
       bot: {
+        giveRealNames: true, // true => random from assets/names.txt, false => Bot<numbers>
         startMoney: 10000,
         turnTimes: [1000, 1500, 2000, 2500, 3000],
         minMoney: [

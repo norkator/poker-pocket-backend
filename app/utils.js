@@ -1,5 +1,29 @@
 // Some utilities functions for all classes
+const fs = require('fs');
+const randomNamesList = fs.readFileSync('./assets/names.txt').toString().split("\n");
 
+
+/**
+ * Get random name for bot from assets names list
+ * @returns {string}
+ */
+exports.getRandomBotName = function (currentRoomBotNames) {
+  let randomName = randomNamesList[this.getRandomInt(0, randomNamesList.length)];
+  for (let i = 0; i < randomNamesList.length; i++) {
+    if (!this.contains(currentRoomBotNames, randomName)) {
+      return randomName;
+    }
+  }
+  return 'Bot';
+};
+
+
+/**
+ * Random integer for any use
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 exports.getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -8,7 +32,7 @@ exports.getRandomInt = function (min, max) {
 // Returns array of string cards
 exports.asciiToStringCardsArray = function (asciiCardsArray) {
   let stringCardsArray = [];
-  for (var i = 0; i < asciiCardsArray.length; i++) {
+  for (let i = 0; i < asciiCardsArray.length; i++) {
     stringCardsArray.push(this.asciiCardToStringCard(asciiCardsArray[i]));
   }
   return stringCardsArray;
@@ -312,3 +336,43 @@ exports.getMedalIconAndNextMedalXP = function (currentXP) {
   return result;
 };
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+// Extend array capabilities
+// noinspection JSUnusedGlobalSymbols
+exports.contains = function (array, element) {
+  return this.indexOf(element) > -1;
+};
+
+
+exports.indexOf = function indexOf(member, startFrom) {
+  if (this == null) {
+    throw new TypeError("Array.prototype.indexOf() - can't convert `" + this + "` to object");
+  }
+  let index = isFinite(startFrom) ? Math.floor(startFrom) : 0,
+    that = this instanceof Object ? this : new Object(this),
+    length = isFinite(that.length) ? Math.floor(that.length) : 0;
+  if (index >= length) {
+    return -1;
+  }
+  if (index < 0) {
+    index = Math.max(length + index, 0);
+  }
+  if (member === undefined) {
+    do {
+      if (index in that && that[index] === undefined) {
+        return index;
+      }
+    } while (++index < length);
+  } else {
+    do {
+      if (that[index] === member) {
+        return index;
+      }
+    } while (++index < length);
+  }
+  return -1;
+};
+
+// ---------------------------------------------------------------------------------------------------------------------

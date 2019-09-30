@@ -443,9 +443,20 @@ function onAppendBot(roomId) {
   if (Number(rooms[roomId].playersToAppend.length + rooms[roomId].players.length) < Number(config.games.holdEm.holdEmGames[rooms[roomId].holdemType].max_seats)) {
     const connectionId = CONNECTION_ID;
     players.push(new player.Player(-1, null, connectionId, config.games.holdEm.bot.startMoney, true));
-    players[connectionId].playerName = "Bot" + Math.floor(Math.random() * 1000);
+    if (config.games.holdEm.bot.giveRealNames) {
+      const currentBotNames = rooms[roomId].players
+        .filter(player => player.isBot)
+        .map(function (playerObj) {
+          return playerObj.playerName
+        });
+      players[connectionId].playerName = utils.getRandomBotName(
+        currentBotNames
+      );
+    } else {
+      players[connectionId].playerName = "Bot" + Math.floor(Math.random() * 1000);
+    }
     rooms[roomId].playersToAppend.push(players[connectionId]);
-    logger.log("BOT " + players[connectionId].playerName + " selected room " + roomId);
+    // logger.log("BOT " + players[connectionId].playerName + " selected room " + roomId);
     rooms[roomId].triggerNewGame();
     CONNECTION_ID = CONNECTION_ID + 1;
   } else {
@@ -736,7 +747,6 @@ function getPlayerChartData(connectionId, socketKey) {
 }
 
 
-
 // Special function for development
 function getKerttuChartData(connectionId, socketKey) {
   if (players[connectionId].connection !== null) {
@@ -759,7 +769,6 @@ function getKerttuChartData(connectionId, socketKey) {
     cleanResponseArray();
   }
 }
-
 
 
 // ---------------------------------------------------------------------------------------------------------------------
