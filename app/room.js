@@ -707,30 +707,32 @@ Room.prototype.sendStatusUpdate = function () {
 // Remember that if small or big blind is not given, folding player must still pay blind
 Room.prototype.playerFold = function (connection_id, socketKey) {
   let playerId = this.getPlayerId(connection_id);
-  if (this.players[playerId].connection != null && this.players[playerId].socketKey === socketKey || this.players[playerId].isBot) {
-    if (playerId !== -1) {
-      if (!this.smallBlindGiven || !this.bigBlindGiven) {
-        let blind_amount = 0;
-        if (!this.smallBlindGiven && !this.bigBlindGiven) {
-          blind_amount = (this.roomMinBet / 2);
-          this.smallBlindGiven = true;
-        } else if (this.smallBlindGiven && !this.bigBlindGiven) {
-          blind_amount = this.roomMinBet;
-          this.bigBlindGiven = true;
-        }
-        if (blind_amount <= this.players[playerId].playerMoney) {
-          if (blind_amount === this.players[playerId].playerMoney || this.someOneHasAllIn()) {
-            this.players[playerId].isAllIn = true;
+  if (this.players[playerId] !== undefined) {
+    if (this.players[playerId].connection != null && this.players[playerId].socketKey === socketKey || this.players[playerId].isBot) {
+      if (playerId !== -1) {
+        if (!this.smallBlindGiven || !this.bigBlindGiven) {
+          let blind_amount = 0;
+          if (!this.smallBlindGiven && !this.bigBlindGiven) {
+            blind_amount = (this.roomMinBet / 2);
+            this.smallBlindGiven = true;
+          } else if (this.smallBlindGiven && !this.bigBlindGiven) {
+            blind_amount = this.roomMinBet;
+            this.bigBlindGiven = true;
           }
-          this.players[playerId].totalBet = this.players[playerId].totalBet + blind_amount;
-          this.players[playerId].playerMoney = this.players[playerId].playerMoney - blind_amount;
+          if (blind_amount <= this.players[playerId].playerMoney) {
+            if (blind_amount === this.players[playerId].playerMoney || this.someOneHasAllIn()) {
+              this.players[playerId].isAllIn = true;
+            }
+            this.players[playerId].totalBet = this.players[playerId].totalBet + blind_amount;
+            this.players[playerId].playerMoney = this.players[playerId].playerMoney - blind_amount;
+          }
         }
+        this.players[playerId].setStateFold();
+        this.checkHighestBet();
+        //this.calculateTotalPot();
+        this.sendLastPlayerAction(connection_id, PLAYER_ACTION_FOLD);
+        this.sendAudioCommand('fold');
       }
-      this.players[playerId].setStateFold();
-      this.checkHighestBet();
-      //this.calculateTotalPot();
-      this.sendLastPlayerAction(connection_id, PLAYER_ACTION_FOLD);
-      this.sendAudioCommand('fold');
     }
   }
 };

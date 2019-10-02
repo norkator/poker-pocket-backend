@@ -698,7 +698,7 @@ eventEmitter.on('onXPGained', function (connectionId, xpGainedAmount, xpMessage)
 // Request autoPlay action for user
 // noinspection JSUnusedLocalSymbols
 function autoPlayAction(connectionId, socketKey) {
-  if (players[connectionId].connection !== null) {
+  if (players[connectionId].connection !== null && !players[connectionId].isFold) {
     const roomId = players[connectionId].selectedRoomId;
     const check_amount = rooms[roomId].currentHighestBet === 0 ?
       rooms[roomId].roomMinBet : (rooms[roomId].currentHighestBet - players[connectionId].totalBet);

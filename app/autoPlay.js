@@ -41,6 +41,17 @@ exports.AutoPlay = AutoPlay;
 
 AutoPlay.prototype.performAction = function () {
 
+  // Error case checking
+  if (this.myHand === undefined) {
+    this.resultsSet.action = AutoPlay.BOT_FOLD;
+    return this.resultsSet;
+  }
+  if (this.myHand[0] === undefined) {
+    this.resultsSet.action = AutoPlay.BOT_FOLD;
+    return this.resultsSet;
+  }
+
+
   // Check bot's funds
   if (this.playerMoney <= (this.roomMinBet + 500)) { // Remove bot and add new one
     this.resultsSet.action = AutoPlay.REMOVE_BOT;
