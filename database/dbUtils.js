@@ -27,7 +27,8 @@ function CreateAccountPromise(sequelizeObjects, username, password, email) {
           {
             name: username,
             password: password,
-            email: email
+            email: email,
+            money: 10000,
           }
         ).then(() => {
           resolve({result: true});
