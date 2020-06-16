@@ -158,10 +158,8 @@ function messageHandler(input) {
     case "getPlayerChartData":
       getPlayerChartData(input.connectionId, input.socketKey);
       break;
-    case "getKerttuChartData":
-      // TODO; This needs to be changed to be dynamic by user so any user can be monitored
-      // noinspection JSUnresolvedFunction
-      getKerttuChartData(input.connectionId, input.socketKey);
+    case "getSelectedPlayerChartData":
+      getSelectedPlayerChartData(input.connectionId, input.socketKey, input.playerId);
       break;
   }
 }
@@ -751,10 +749,10 @@ function getPlayerChartData(connectionId, socketKey) {
 
 
 // Special function for development
-function getKerttuChartData(connectionId, socketKey) {
+function getSelectedPlayerChartData(connectionId, socketKey, playerId) {
   if (players[connectionId].connection !== null) {
     if (players[connectionId].socketKey === socketKey) {
-      dbUtils.GetPlayerChartDataPromise(sequelizeObjects, 141).then(results => {
+      dbUtils.GetPlayerChartDataPromise(sequelizeObjects, playerId).then(results => {
         if (players[connectionId].connection !== null) {
           responseArray.key = "getPlayerChartDataResult";
           responseArray.code = 200;

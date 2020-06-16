@@ -1,7 +1,7 @@
 # Poker Pocket Backend
 
 Nitramite Poker Pocket back end server currently running Texas Hold'em games. It's powering 
-Nitramite Poker Pocket game. This back end is pretty light weight and can run thousands of rooms easily. 
+[Nitramite Poker Pocket game](https://pokerpocket.nitramite.com/). This back end is pretty light weight and can run thousands of rooms easily. 
 Future plans are to support multiple different games.
 
 You are NOT allowed to copy this back end and make your own game. 
@@ -25,9 +25,8 @@ This web ui can be used for testing this back end. See instructions below.
 
 
 ### Prerequisites
-* Download handRanks.dat file from: 
-https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat  
-and place it under `app` folder.
+* Download handRanks.dat file from: [https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat](https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat)  
+and place it under `/app` folder.
 * PostgreSQL https://www.postgresql.org/
 
 
