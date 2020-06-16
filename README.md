@@ -1,3 +1,5 @@
+![poker_pocket_promo](./images/poker_pocket.png) 
+
 # Poker Pocket Backend
 
 Nitramite Poker Pocket back end server currently running Texas Hold'em games. It's powering 
@@ -19,6 +21,7 @@ I currently have two different front end clients. You may want to take a look at
 see what it's all about.
 
 Web UI: https://pokerpocket.nitramite.com/  
+Web UI source: https://github.com/norkator/Poker-Pocket-Web-Client  
 Android client: https://play.google.com/store/apps/details?id=com.nitramite.pokerpocket
 
 This web ui can be used for testing this back end. See instructions below.
