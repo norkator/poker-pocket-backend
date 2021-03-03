@@ -6,7 +6,7 @@
   "private": true,
   "license": "CC BY-NC-ND 4.0",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon holdem.js"
   },
   "dependencies": {
     "dotenv": "8.2.0",
