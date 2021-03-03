@@ -3,19 +3,19 @@
 # Poker Pocket Backend
 
 Nitramite Poker Pocket back end server currently running Texas Hold'em games. It's powering 
-[Nitramite Poker Pocket game](https://pokerpocket.nitramite.com/). This back end is pretty light weight and can run thousands of rooms easily. 
-Future plans are to support multiple different games.
+[Nitramite Poker Pocket game](https://pokerpocket.nitramite.com/). This back end is pretty light weight 
+and can run thousands of rooms easily. 
 
-You are NOT allowed to copy this back end and make your own game. 
+You are **NOT** allowed to copy this back end and make your own game but you can join development here. 
 
 ### Help required
 
-Reason I shared this code here (see license) is that I want to <b>find someone who wants to 
+Original reason I shared this code here was that I wanted to <b>find someone who wants to 
 create Virtual Reality front end</b> with Unity or any other game development platform.
-If that is you? you can contact me via email at: nitramite@outlook.com
-so that we can discuss our deal, it's okay that who ever does it owns that vr front end 
-and also promotes my non VR versions. This way we both MAY be able to make buck out of this. 
-That's the goal. Would be super awesome to work with someone together.
+Time has passed so much that it may never happen. If you are interested you can 
+contact me via email at: nitramite@outlook.com or open issue about it.
+
+I currently don't have plan to develop this further but will keep game running.
 
 I currently have two different front end clients. You may want to take a look at them to 
 see what it's all about.
@@ -30,11 +30,11 @@ This web ui can be used for testing this back end. See instructions below.
 ### Prerequisites
 * Download handRanks.dat file from: [https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat](https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat)  
 and place it under `/app` folder.
-* PostgreSQL https://www.postgresql.org/
+* Get database platform PostgreSQL https://www.postgresql.org/
 
 
 ### Basic setup
-1. config.js has some configurations you may want to setup.
+1. config.js has some configurations you may want to change.
 2. create `.env` file with following contents and provide database connection properties.
 
 ```dotenv
@@ -49,6 +49,8 @@ HTTPS_KEY=/.../privkey.pem
 HTTPS_CERT=/.../cert.pem
 HTTPS_CA=/.../chain.pem
 ```
+
+https key, cert, ca are not needed for development use.
 
 3. Run `npm install`
 4. Run `npm run dev` on development environment (uses nodemon)
