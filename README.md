@@ -34,11 +34,26 @@ and place it under `/app` folder.
 
 
 ### Basic setup
-1. config.js has all configurations, including database connection properties.
-2. Run `npm install`
-3. Run `npm run dev` on development environment (uses nodemon)
-4. Backend is now running.
-5. Open https://pokerpocket.nitramite.com/ and use connection switch set as `dev` to open connection
+1. config.js has some configurations you may want to setup.
+2. create `.env` file with following contents and provide database connection properties.
+
+```dotenv
+DB_DIALECT=postgres
+DB_USER=database_user
+DB_HOST=database_host
+DB_DATABASE=PokerPocket
+DB_PASSWORD=database_password
+DB_PORT=5432
+
+HTTPS_KEY=/.../privkey.pem
+HTTPS_CERT=/.../cert.pem
+HTTPS_CA=/.../chain.pem
+```
+
+3. Run `npm install`
+4. Run `npm run dev` on development environment (uses nodemon)
+5. Backend is now running.
+6. Open https://pokerpocket.nitramite.com/ and use connection switch set as `dev` to open connection
 to localhost web socket.
 
 

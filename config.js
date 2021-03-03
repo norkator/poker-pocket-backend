@@ -9,13 +9,6 @@ exports = module.exports = {
   sequelize: {
     logging: false,
   },
-  postgreSql: {
-    user: 'postgres',
-    host: 'localhost',
-    database: 'PokerPocket',
-    password: 'rng4w4CWv6xVH85zCAYGXHsb', // Non sensitive password for development environment, replace with your own.
-    port: 5432
-  },
   common: {
     startGameTimeOut: 3000,     // 2000 stock
     startingRooms: 1,          // Default 4, How many rooms to create at start

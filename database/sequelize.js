@@ -1,8 +1,8 @@
-// https://www.codementor.io/mirko0/how-to-use-sequelize-with-node-and-express-i24l67cuz
-
 // Components
 const config = require('../config');
 const Sequelize = require('sequelize');
+const dotEnv = require('dotenv');
+dotEnv.config();
 
 // Models
 const UserModel = require('../models/user');
@@ -10,9 +10,10 @@ const StatisticModel = require('../models/statistic');
 
 
 // Sequelize instance
-const sequelize = new Sequelize(config.postgreSql.database, config.postgreSql.user, config.postgreSql.password, {
-  host: config.postgreSql.host,
-  dialect: 'postgres', // 'mysql'|'mariadb'|'sqlite'|'postgres'|'mssql',
+const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
+  port: process.env.DB_PORT,
+  host: process.env.DB_HOST,
+  dialect: process.env.DB_DIALECT,
   pool: {
     max: 10,
     min: 0,
