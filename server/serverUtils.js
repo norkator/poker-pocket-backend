@@ -1,5 +1,7 @@
 const fs = require('fs');
 const config = require('../config');
+const dotEnv = require('dotenv');
+dotEnv.config();
 
 
 /**
@@ -15,9 +17,9 @@ exports.GetCertOptions = function () {
   } else {
     return {
       secure: true,
-      key: fs.readFileSync('/etc/letsencrypt/live/pokerpocket.nitramite.com/privkey.pem'),
-      cert: fs.readFileSync('/etc/letsencrypt/live/pokerpocket.nitramite.com/cert.pem'),
-      ca: fs.readFileSync('/etc/letsencrypt/live/pokerpocket.nitramite.com/chain.pem')
+      key: fs.readFileSync(process.env.HTTPS_KEY),
+      cert: fs.readFileSync(process.env.HTTPS_CERT),
+      ca: fs.readFileSync(process.env.HTTPS_CA)
     };
   }
 };

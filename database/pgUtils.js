@@ -1,6 +1,8 @@
 const config = require('../config');
 const pgTools = require('pgtools');
 const logger = require('../app/logger');
+const dotEnv = require('dotenv');
+dotEnv.config();
 
 /**
  * This scripts makes sure we have database
@@ -29,13 +31,13 @@ function createDatabase() {
   return new Promise(function (resolve, reject) {
     logger.log('>>> pgTools check database existence', logger.LOG_GREEN);
     pgTools.createdb({
-      user: config.postgreSql.user,
-      password: config.postgreSql.password,
-      port: config.postgreSql.port,
-      host: config.postgreSql.host
-    }, config.postgreSql.database, function (error, response) {
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+      host: process.env.DB_HOST
+    }, process.env.DB_DATABASE, function (error, response) {
       if (!error) {
-        console.log('db ' + config.postgreSql.database + ' did not exists. Created it!');
+        console.log('db ' + process.env.DB_DATABASE + ' did not exists. Created it!');
         resolve();
       } else {
         reject(error);
