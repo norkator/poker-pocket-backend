@@ -10,6 +10,7 @@ exports.LOG_GREEN = 1;
 exports.LOG_YELLOW = 2;
 exports.LOG_CYAN = 3;
 exports.LOG_UNDERSCORE = 4;
+exports.LOG_RED = 5;
 
 
 // Log function
@@ -30,6 +31,9 @@ exports.log = function (logStr, type = this.LOG_DEFAULT) {
         break;
       case this.LOG_UNDERSCORE:
         console.log('\x1b[4m%s\x1b[0m', logStr);
+        break;
+      case this.LOG_RED:
+        console.log('\x1b[31m%s\x1b[0m', logStr);
         break;
     }
   }

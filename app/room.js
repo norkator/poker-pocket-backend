@@ -1227,7 +1227,14 @@ Room.prototype.updateLoggedInPlayerDatabaseStatistics = function (winnerPlayers,
           // Update player funds
           dbUtils.UpdatePlayerMoneyPromise(this.sequelizeObjects, this.players[i].playerDatabaseId, this.players[i].playerMoney).then(() => {
           });
-          dbUtils.InsertPlayerStatisticPromise(this.sequelizeObjects, this.players[i].playerDatabaseId, this.players[i].playerMoney, this.players[i].playerWinCount, this.players[i].playerLoseCount).then(() => {
+          dbUtils.InsertPlayerStatisticPromise(
+            this.sequelizeObjects, this.players[i].playerDatabaseId,
+            this.players[i].playerMoney, this.players[i].playerWinCount,
+            this.players[i].playerLoseCount
+          ).then(() => {
+            logger.log('Updated player ' + this.players[i].playerName + ' statistics.', logger.LOG_GREEN);
+          }).catch(error => {
+            logger.log(error, logger.LOG_RED);
           });
         }
       }

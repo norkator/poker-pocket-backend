@@ -239,8 +239,8 @@ function InsertPlayerStatisticPromise(sequelizeObjects, userId, money, win_count
       }
     ).then(() => {
       resolve({result: true});
-    }).catch(() => {
-      resolve({result: false});
+    }).catch(error => {
+      reject(error);
     });
   });
 }
