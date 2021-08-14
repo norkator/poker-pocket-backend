@@ -9,14 +9,14 @@
     "dev": "nodemon holdem.js"
   },
   "dependencies": {
-    "dotenv": "8.2.0",
+    "dotenv": "10.0.0",
     "nodejs-websocket": "1.7.2",
     "os-utils": "0.0.14",
-    "pg": "8.5.1",
-    "pg-hstore": "2.3.3",
-    "pgtools": "0.3.1",
+    "pg": "8.7.1",
+    "pg-hstore": "2.3.4",
+    "pgtools": "0.3.2",
     "poker-odds": "1.0.1",
     "pokersolver": "2.1.4",
-    "sequelize": "6.6.2"
+    "sequelize": "6.6.5"
   }
 }
