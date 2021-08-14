@@ -9,7 +9,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        sshPublisher(publishers: [sshPublisherDesc(configName: 'RASP TRE', transfers: [sshTransfer(cleanRemote: false, excludes: '**/node_modules/**', execCommand: '/home/pi/scripts/pokerpocket_deploy.sh', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'pokerpocket/holdem/backend/', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'UBUNTU SERVER SASTAMALA', transfers: [sshTransfer(cleanRemote: false, excludes: '**/node_modules/**', execCommand: '/home/pi/scripts/pokerpocket_deploy.sh', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'pokerpocket/holdem/backend/', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
       }
     }
   }
