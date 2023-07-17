@@ -1,5 +1,5 @@
 exports = module.exports = {
-  isDev: false,
+  isDev: true,
   logging: true,
   server: {
     secure: true, // wss
