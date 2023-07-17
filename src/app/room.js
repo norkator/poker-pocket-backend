@@ -1334,7 +1334,7 @@ Room.prototype.contains = function (array, element) {
 
 Room.prototype.indexOf = function indexOf(member, startFrom) {
   if (this == null) {
-    throw new TypeError('Array.prototype.indexOf() - can't convert `' + this + '` to object');
+    throw new TypeError('Array.prototype.indexOf() - can\'t convert `\' + this + \'` to object');
   }
   let index = isFinite(startFrom) ? Math.floor(startFrom) : 0,
     that = this instanceof Object ? this : new Object(this),

@@ -1,6 +1,6 @@
 // Some utilities functions for all classes
 const fs = require('fs');
-const randomNamesList = fs.readFileSync('./assets/names.txt').toString().split('\n');
+const randomNamesList = fs.readFileSync('./src/assets/names.txt').toString().split('\n');
 
 
 /**
