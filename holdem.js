@@ -1,7 +1,7 @@
 'use strict';
 
 // Imports
-const webSocket = require("nodejs-websocket");
+const webSocket = require('nodejs-websocket');
 const initDb = require('./src/database/pgUtils');
 const config = require('./config');
 const utils = require('./src/app/utils');
