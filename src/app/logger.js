@@ -2,7 +2,7 @@
  * Logger util for helping disable normal logging easier way
  * and to give log's nicer look
  */
-let config = require('../config');
+let config = require('../../config');
 
 // Logging color types
 exports.LOG_DEFAULT = 0; // No coloring

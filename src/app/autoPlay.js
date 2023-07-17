@@ -1,5 +1,5 @@
 // Bot for game play
-const config = require('../config');
+const config = require('../../config');
 const utils = require('./utils');
 const roomStages = require('./room');
 const logger = require('./logger');

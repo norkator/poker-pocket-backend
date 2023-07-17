@@ -2,21 +2,21 @@
   "name": "nitramite-poker-pocket-back-end-server",
   "author": "Martin Kankaanranta",
   "description": "Texas Hold'em game server",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
-  "license": "CC BY-NC-ND 4.0",
+  "license": "MIT",
   "scripts": {
     "dev": "nodemon holdem.js"
   },
   "dependencies": {
-    "dotenv": "10.0.0",
+    "dotenv": "16.3.1",
     "nodejs-websocket": "1.7.2",
     "os-utils": "0.0.14",
-    "pg": "8.7.1",
+    "pg": "8.11.1",
     "pg-hstore": "2.3.4",
-    "pgtools": "0.3.2",
+    "pgtools": "1.0.0",
     "poker-odds": "1.0.1",
     "pokersolver": "2.1.4",
-    "sequelize": "6.6.5"
+    "sequelize": "6.32.1"
   }
 }

@@ -2,7 +2,7 @@ exports = module.exports = {
   isDev: true,
   logging: true,
   server: {
-    secure: false, // ws
+    secure: false, // false=ws, true=wss
     port: 8000,
     host: '0.0.0.0'
   },
