@@ -2,7 +2,7 @@ exports = module.exports = {
   isDev: true,
   logging: true,
   server: {
-    secure: true, // wss
+    secure: false, // false=ws, true=wss
     port: 8001,
     host: '0.0.0.0'
   },
@@ -39,7 +39,7 @@ exports = module.exports = {
       },
       holdEmGames: [
         {
-          name: 'Texas Holdem with low bets',
+          name: 'Texas Hold\'em with low bets',
           typeName: 'Low bets',
           max_seats: 6,
           minPlayers: 2,
@@ -48,7 +48,7 @@ exports = module.exports = {
           afterRoundCountdown: 12
         },
         {
-          name: 'Texas Holdem with medium bets',
+          name: 'Texas Hold\'em with medium bets',
           typeName: 'Medium bets',
           max_seats: 6,
           minPlayers: 2,
@@ -57,7 +57,7 @@ exports = module.exports = {
           afterRoundCountdown: 12
         },
         {
-          name: 'Texas Holdem with high bets',
+          name: 'Texas Hold\'em with high bets',
           typeName: 'High bets',
           max_seats: 6,
           minPlayers: 2,
