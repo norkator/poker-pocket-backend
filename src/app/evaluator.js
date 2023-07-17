@@ -1,7 +1,6 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-// noinspection NonAsciiCharacters, JSNonASCIINames
 module.exports = {
   HANDTYPES: [
     "invalid hand",

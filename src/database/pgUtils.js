@@ -1,4 +1,4 @@
-const config = require('../config');
+const config = require('../../config');
 const pgTools = require('pgtools');
 const logger = require('../app/logger');
 const dotEnv = require('dotenv');

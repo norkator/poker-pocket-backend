@@ -2,19 +2,19 @@
 
 // Imports
 const webSocket = require("nodejs-websocket");
-const initDb = require('./database/pgUtils');
+const initDb = require('./src/database/pgUtils');
 const config = require('./config');
-const utils = require('./app/utils');
-const logger = require('./app/logger');
+const utils = require('./src/app/utils');
+const logger = require('./src/app/logger');
 const osUtils = require('os-utils');
 const events = require('events');
-const serverUtils = require('./server/serverUtils');
-const autoPlay = require("./app/autoPlay");
-const dbUtils = require('./database/dbUtils');
+const serverUtils = require('./src/utils');
+const autoPlay = require('./src/app/autoPlay');
+const dbUtils = require('./src/database/dbUtils');
 
 // Game objects
-const room = require('./app/room'); // Empty object of room
-const player = require('./app/player'); // Empty object of player
+const room = require('./src/app/room'); // Empty object of room
+const player = require('./src/app/player'); // Empty object of player
 
 // Variables
 let sequelizeObjects = null; // Server can host games without database
@@ -32,7 +32,7 @@ let eventEmitter = new events.EventEmitter();
 /* Starting point */
 
 initDb.initDatabase().then(() => {
-  sequelizeObjects = require('./database/sequelize'); // This creates tables if not exists and returns table models
+  sequelizeObjects = require('./src/database/sequelize'); // This creates tables if not exists and returns table models
   startGames();
 });
 

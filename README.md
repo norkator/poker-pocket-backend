@@ -31,7 +31,7 @@ This web ui can be used for testing this back end. See instructions below.
 
 * Download handRanks.dat file
   from: [https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat](https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat)  
-  and place it under `/app` folder.
+  and place it under `/src/app` folder.
 * Get database platform PostgreSQL https://www.postgresql.org/
   * You can also change database to something else, see:
     * https://github.com/norkator/poker-pocket-backend/blob/master/database/sequelize.js#L16

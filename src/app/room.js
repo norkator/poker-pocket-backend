@@ -3,14 +3,14 @@
  * this file may be renamed in future when other game types are implemented
  */
 
-const config = require('../config');
+const config = require('../../config');
 const dbUtils = require('../database/dbUtils');
 const utils = require('./utils');
 const logger = require('./logger');
-let poker = require("./poker");
+let poker = require('./poker');
 let player = require('./player');
 let evaluator = require('./evaluator');
-let bot = require("./bot");
+let bot = require('./bot');
 let pokerSolver = require('pokersolver').Hand;
 
 
@@ -46,7 +46,7 @@ function Room(holdemType, number, eventEmitter, sequelizeObjects) {
   this.eventEmitter = eventEmitter;
   this.sequelizeObjects = sequelizeObjects;
   this.roomMinBet = config.games.holdEm.holdEmGames[holdemType].minBet;
-  this.roomName = "Room " + number;
+  this.roomName = 'Room ' + number;
   this.maxSeats = config.games.holdEm.holdEmGames[holdemType].max_seats;
   this.minPlayers = config.games.holdEm.holdEmGames[holdemType].minPlayers;
   this.currentStage = Room.HOLDEM_STAGE_ONE_HOLE_CARDS;
@@ -74,7 +74,7 @@ function Room(holdemType, number, eventEmitter, sequelizeObjects) {
   this.isResultsCall = false; // True means update on client visual side
   this.roundWinnerPlayerIds = [];
   this.roundWinnerPlayerCards = [];
-  this.currentStatusText = "Waiting players...";
+  this.currentStatusText = 'Waiting players...';
   this.lastUserAction = {playerId: -1, actionText: null}; // Animated last user action text
   this.dealerPlayerArrayIndex = -1;
   this.smallBlindPlayerArrayIndex = -1;
@@ -173,21 +173,21 @@ Room.prototype.appendPlayers = function () {
           _this.startGame();
         }, config.common.startGameTimeOut);
       } else {
-        logger.log("* Room " + this.roomName + " has not enough players");
+        logger.log('* Room ' + this.roomName + ' has not enough players');
       }
     } else {
       if (this.players.length >= this.minPlayers) {
-        logger.log("No players to append... starting game");
+        logger.log('No players to append... starting game');
         this.startGame();
         setTimeout(function () {
           _this.startGame();
         }, config.common.startGameTimeOut);
       } else {
-        this.currentStatusText = this.minPlayers + " players needed to start a new game...";
+        this.currentStatusText = this.minPlayers + ' players needed to start a new game...';
       }
     }
   } else {
-    logger.log("* Cant append more players since round is running for room: " + this.roomName);
+    logger.log('* Cant append more players since round is running for room: ' + this.roomName);
   }
 };
 
@@ -195,7 +195,7 @@ Room.prototype.appendPlayers = function () {
 Room.prototype.startGame = function () {
   if (!this.gameStarted) {
     this.gameStarted = true;
-    logger.log("Game started for room: " + this.roomName);
+    logger.log('Game started for room: ' + this.roomName);
     this.resetRoomParams();
     this.resetPlayerParameters(); // Reset players (resets dealer param too)
     this.setNextDealerPlayer(); // Get next dealer player
@@ -237,12 +237,12 @@ Room.prototype.newGame = function () {
 Room.prototype.staging = function () {
   switch (this.currentStage) {
     case Room.HOLDEM_STAGE_ONE_HOLE_CARDS: // Give cards
-      this.currentStatusText = "Hole cards";
+      this.currentStatusText = 'Hole cards';
       this.burnCard(); // Burn one card before dealing cards
       this.holeCards();
       break;
     case Room.HOLDEM_STAGE_TWO_PRE_FLOP: // First betting round
-      this.currentStatusText = "Pre flop & small blind & big blind";
+      this.currentStatusText = 'Pre flop & small blind & big blind';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -251,12 +251,12 @@ Room.prototype.staging = function () {
       this.bettingRound(this.smallBlindPlayerArrayIndex); // this.bettingRound(this.current_player_turn);
       break;
     case Room.HOLDEM_STAGE_THREE_THE_FLOP: // Show three middle cards
-      this.currentStatusText = "The flop";
+      this.currentStatusText = 'The flop';
       this.burnCard(); // Burn one card before dealing cards
       this.theFlop();
       break;
     case Room.HOLDEM_STAGE_FOUR_POST_FLOP: // Second betting round
-      this.currentStatusText = "Post flop";
+      this.currentStatusText = 'Post flop';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -265,12 +265,12 @@ Room.prototype.staging = function () {
       this.bettingRound(this.current_player_turn); // this.bettingRound(this.current_player_turn);
       break;
     case Room.HOLDEM_STAGE_FIVE_THE_TURN: // Show fourth card
-      this.currentStatusText = "The turn";
+      this.currentStatusText = 'The turn';
       this.burnCard(); // Burn one card before dealing cards
       this.theTurn();
       break;
     case Room.HOLDEM_STAGE_SIX_THE_POST_TURN: // Third betting round
-      this.currentStatusText = "Post turn";
+      this.currentStatusText = 'Post turn';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -279,12 +279,12 @@ Room.prototype.staging = function () {
       this.bettingRound(this.current_player_turn); // this.bettingRound(this.current_player_turn);
       break;
     case Room.HOLDEM_STAGE_SEVEN_THE_RIVER: // Show fifth card
-      this.currentStatusText = "The river";
+      this.currentStatusText = 'The river';
       this.burnCard(); // Burn one card before dealing cards
       this.theRiver();
       break;
     case Room.HOLDEM_STAGE_EIGHT_THE_SHOW_DOWN: // Fourth and final betting round
-      this.currentStatusText = "The show down";
+      this.currentStatusText = 'The show down';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -293,11 +293,11 @@ Room.prototype.staging = function () {
       this.bettingRound(this.current_player_turn); // this.bettingRound(this.current_player_turn);
       break;
     case Room.HOLDEM_STAGE_NINE_SEND_ALL_PLAYERS_CARDS: // Send all players cards here before results to all players and spectators
-      logger.log(this.roomName + " sending cards to all room clients...");
+      logger.log(this.roomName + ' sending cards to all room clients...');
       this.sendAllPlayersCards(); // Avoiding cheating with this
       break;
     case Room.HOLDEM_STAGE_TEN_RESULTS: // Results
-      logger.log("-------- Results : " + this.roomName + " --------");
+      logger.log('-------- Results : ' + this.roomName + ' --------');
       this.roundResultsEnd();
       break;
   }
@@ -313,8 +313,8 @@ Room.prototype.holeCards = function () {
     this.players[i].playerCards[0] = this.getNextDeckCard();
     this.players[i].playerCards[1] = this.getNextDeckCard();
   }
-  let response = {key: "", data: {}};
-  response.key = "holeCards";
+  let response = {key: '', data: {}};
+  response.key = 'holeCards';
   for (let i = 0; i < this.players.length; i++) {
     response.data.players = [];
     for (let p = 0; p < this.players.length; p++) {
@@ -351,8 +351,8 @@ Room.prototype.theFlop = function () {
   this.middleCards[0] = this.getNextDeckCard();
   this.middleCards[1] = this.getNextDeckCard();
   this.middleCards[2] = this.getNextDeckCard();
-  let response = {key: "", data: {}};
-  response.key = "theFlop";
+  let response = {key: '', data: {}};
+  response.key = 'theFlop';
   response.data.middleCards = this.middleCards;
   for (let p = 0; p < this.players.length; p++) {
     this.sendWebSocketData(p, response);
@@ -375,8 +375,8 @@ Room.prototype.theTurn = function () {
   this.currentStage = Room.HOLDEM_STAGE_SIX_THE_POST_TURN; // Increment
   const _this = this;
   this.middleCards[3] = this.getNextDeckCard();
-  let response = {key: "", data: {}};
-  response.key = "theTurn";
+  let response = {key: '', data: {}};
+  response.key = 'theTurn';
   response.data.middleCards = this.middleCards;
   for (let p = 0; p < this.players.length; p++) {
     this.sendWebSocketData(p, response);
@@ -399,8 +399,8 @@ Room.prototype.theRiver = function () {
   this.currentStage = Room.HOLDEM_STAGE_EIGHT_THE_SHOW_DOWN; // Increment
   const _this = this;
   this.middleCards[4] = this.getNextDeckCard();
-  let response = {key: "", data: {}};
-  response.key = "theRiver";
+  let response = {key: '', data: {}};
+  response.key = 'theRiver';
   response.data.middleCards = this.middleCards;
   for (let p = 0; p < this.players.length; p++) {
     this.sendWebSocketData(p, response);
@@ -422,8 +422,8 @@ Room.prototype.theRiver = function () {
 Room.prototype.sendAllPlayersCards = function () {
   this.currentStage = Room.HOLDEM_STAGE_TEN_RESULTS; // Increment
   const _this = this;
-  let response = {key: "", data: {}};
-  response.key = "allPlayersCards";
+  let response = {key: '', data: {}};
+  response.key = 'allPlayersCards';
   response.data.players = [];
   for (let i = 0; i < this.players.length; i++) {
     let playerData = {};
@@ -450,7 +450,7 @@ Room.prototype.sendAllPlayersCards = function () {
 // Calculate winner and transfer money
 Room.prototype.roundResultsEnd = function () {
   const _this = this;
-  logger.log("--------ROUND RESULT-----------");
+  logger.log('--------ROUND RESULT-----------');
   let winnerPlayers = [];
 
   let currentHighestRank = 0;
@@ -468,8 +468,8 @@ Room.prototype.roundResultsEnd = function () {
       this.players[i].handValue = evaluated.value;
       this.players[i].handName = evaluated.handName;
       // Log out results
-      logger.log(this.players[i].playerName + " has " + this.players[i].handName + " with value: " + this.players[i].handValue
-        + " cards involved: " + hand.cards, logger.LOG_GREEN);
+      logger.log(this.players[i].playerName + ' has ' + this.players[i].handName + ' with value: ' + this.players[i].handValue
+        + ' cards involved: ' + hand.cards, logger.LOG_GREEN);
       // Calculate winner(s)
       if (this.players[i].handValue > currentHighestRank) {
         currentHighestRank = this.players[i].handValue;
@@ -489,8 +489,8 @@ Room.prototype.roundResultsEnd = function () {
     this.roundWinnerPlayerIds.push(this.players[winnerPlayers[i]].playerId);
     this.roundWinnerPlayerCards.push(utils.stringToAsciiCardsArray(this.players[winnerPlayers[i]].cardsInvolvedOnEvaluation));
   }
-  logger.log("Room = " + this.roomName + " winner(s) are : " + winnerNames);
-  this.currentStatusText = winnerNames + " got " + this.players[winnerPlayers[0]].handName;
+  logger.log('Room = ' + this.roomName + ' winner(s) are : ' + winnerNames);
+  this.currentStatusText = winnerNames + ' got ' + this.players[winnerPlayers[0]].handName;
 
 
   this.updateLoggedInPlayerDatabaseStatistics(winnerPlayers, this.lastWinnerPlayers);
@@ -522,7 +522,7 @@ Room.prototype.roundResultsMiddleOfTheGame = function () {
     this.collectChipsToPotAndSendAction();
     this.collectingPot = false;
     this.players[winnerPlayer].playerMoney = this.players[winnerPlayer].playerMoney + this.totalPot;
-    this.currentStatusText = this.players[winnerPlayer].playerName + " is only standing player!";
+    this.currentStatusText = this.players[winnerPlayer].playerName + ' is only standing player!';
     this.isResultsCall = true;
     this.updateLoggedInPlayerDatabaseStatistics([winnerPlayer], this.lastWinnerPlayers);
     this.lastWinnerPlayers = [winnerPlayer]; // Take new reference of winner player
@@ -655,8 +655,8 @@ Room.prototype.clearTimers = function () {
 // Some helper methods
 
 Room.prototype.sendStatusUpdate = function () {
-  let response = {key: "", data: {}};
-  response.key = "statusUpdate";
+  let response = {key: '', data: {}};
+  response.key = 'statusUpdate';
   response.data.totalPot = this.totalPot;
   response.data.currentStatus = this.currentStatusText;
   response.data.middleCards = this.middleCards;
@@ -680,7 +680,7 @@ Room.prototype.sendStatusUpdate = function () {
   response.data.playingPlayersCount = this.players.length; // Players count in this room
   response.data.appendPlayersCount = this.playersToAppend.length; // Waiting to get appended in game players count
   response.data.spectatorsCount = this.spectators.length; // Spectating people count
-  response.data.deckStatus = this.deckCard + "/" + this.deckSize;
+  response.data.deckStatus = this.deckCard + '/' + this.deckSize;
   response.data.deckCardsBurned = this.deckCardsBurned; // How many cards is burned
   response.data.collectingPot = this.collectingPot;
 
@@ -895,8 +895,8 @@ Room.prototype.checkHighestBet = function () {
 
 // Get room parameters
 Room.prototype.getRoomParams = function () {
-  let response = {key: "", data: {}};
-  response.key = "roomParams";
+  let response = {key: '', data: {}};
+  response.key = 'roomParams';
   response.data.gameStarted = !!(this.currentStage >= Room.HOLDEM_STAGE_ONE_HOLE_CARDS && this.holeCardsGiven);
   response.data.playerCount = this.players.length;
   response.data.roomMinBet = this.roomMinBet;
@@ -919,7 +919,7 @@ Room.prototype.sendWebSocketData = function (player, data) {
   if (this.players[player] != null && !this.players[player].isBot) {
     if (this.players[player].connection != null) {
       if (this.players[player].connection.readyState === OPEN) {
-        //console.log("* Sending data: " + JSON.stringify(data));
+        //console.log('* Sending data: ' + JSON.stringify(data));
         this.players[player].connection.sendText(JSON.stringify(data));
       } else {
         this.players[player].connection = null;
@@ -980,8 +980,8 @@ Room.prototype.cleanSpectators = function () {
 
 // Needed to be able to play other players command audio on client side
 Room.prototype.sendAudioCommand = function (action) {
-  let response = {key: "", data: {}};
-  response.key = "audioCommand";
+  let response = {key: '', data: {}};
+  response.key = 'audioCommand';
   response.data.command = action;
   for (let i = 0; i < this.players.length; i++) {
     this.updateJsonTemp = response;
@@ -998,12 +998,12 @@ Room.prototype.sendAudioCommand = function (action) {
 
 // Animated last user action text command
 Room.prototype.sendLastPlayerAction = function (connection_id, actionStr) {
-  let response = {key: "", data: {}};
-  response.key = "lastUserAction";
+  let response = {key: '', data: {}};
+  response.key = 'lastUserAction';
   this.lastUserAction.playerId = connection_id;
   this.lastUserAction.actionText = actionStr;
   response.data = this.lastUserAction;
-  //console.log("Last user action data: " + JSON.stringify(response));
+  //console.log('Last user action data: ' + JSON.stringify(response));
   for (let i = 0; i < this.players.length; i++) {
     this.updateJsonTemp = response;
     this.sendWebSocketData(i, response);
@@ -1031,8 +1031,8 @@ Room.prototype.collectChipsToPotAndSendAction = function () {
   // Send animation action
   if (boolMoneyToCollect) {
     this.collectingPot = true;
-    let response = {key: "", data: {}};
-    response.key = "collectChipsToPot";
+    let response = {key: '', data: {}};
+    response.key = 'collectChipsToPot';
     for (let i = 0; i < this.players.length; i++) {
       this.updateJsonTemp = response;
       this.sendWebSocketData(i, response);
@@ -1051,8 +1051,8 @@ Room.prototype.collectChipsToPotAndSendAction = function () {
 
 // Custom message to send to a playing client before object is moved
 Room.prototype.sendClientMessage = function (playerObject, message) {
-  let response = {key: "", data: {}};
-  response.key = "clientMessage";
+  let response = {key: '', data: {}};
+  response.key = 'clientMessage';
   response.data.message = message;
   if (playerObject.connection != null) {
     if (playerObject.connection.readyState === OPEN) {
@@ -1334,7 +1334,7 @@ Room.prototype.contains = function (array, element) {
 
 Room.prototype.indexOf = function indexOf(member, startFrom) {
   if (this == null) {
-    throw new TypeError("Array.prototype.indexOf() - can't convert `" + this + "` to object");
+    throw new TypeError('Array.prototype.indexOf() - can't convert `' + this + '` to object');
   }
   let index = isFinite(startFrom) ? Math.floor(startFrom) : 0,
     that = this instanceof Object ? this : new Object(this),
