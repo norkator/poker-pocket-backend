@@ -34,7 +34,7 @@ This web ui can be used for testing this back end. See instructions below.
   and place it under `/src/app` folder.
 * Get database platform PostgreSQL https://www.postgresql.org/
   * You can also change database to something else, see:
-    * https://github.com/norkator/poker-pocket-backend/blob/master/database/sequelize.js#L16
+    * https://github.com/norkator/poker-pocket-backend/blob/master/src/database/sequelize.js#L16
     * https://sequelize.org/docs/v6/other-topics/dialect-specific-things/
 
 ### Basic setup
