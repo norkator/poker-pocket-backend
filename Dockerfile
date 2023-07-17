@@ -10,6 +10,10 @@ RUN npm install
 # Copy app sources
 COPY . .
 
+# Download HandRanks.dat
+RUN curl -LJO https://github.com/christophschmalhofer/poker/raw/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat
+RUN mv -f HandRanks.dat ./src/app/
+
 # Replace config with prod
 RUN mv -f config-prod.js config.js
 
