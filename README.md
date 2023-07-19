@@ -58,6 +58,10 @@ SERVER_CMD_PASSWORD=anypasswd
 6. Open https://pokerpocket.nitramite.com/ and use connection switch set as `dev` to open connection
    to localhost web socket.
 
+Optional: If you need created user to play automatically, go to browser console and type:
+
+![autoplay](./images/autoplay.png)
+
 ### Backend & front end communication
 
 To create front end, it's essential to know how communication works.
