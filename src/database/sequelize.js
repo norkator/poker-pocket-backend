@@ -32,6 +32,10 @@ const User = UserModel(sequelize, Sequelize);
 const Statistic = StatisticModel(sequelize, Sequelize);
 
 
+// Define relations
+User.hasMany(Statistic);
+
+
 // Sync with database
 sequelize.sync(/*{force: true}*/) // Do not use force, will drop table
   .then(() => {
