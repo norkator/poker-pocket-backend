@@ -1,6 +1,8 @@
 'use strict';
 
 // Imports
+const dotEnv = require('dotenv');
+dotEnv.config();
 const webSocket = require('nodejs-websocket');
 const initDb = require('./src/database/pgUtils');
 const config = require('./config');
@@ -140,7 +142,6 @@ function messageHandler(input) {
       setLoggedInUserParameters(input.connectionId, input.socketKey, input.name, input.password);
       break;
     case "serverCommand":
-      // noinspection JSUnresolvedVariable
       serverCommand(input.connectionId, input.socketKey, input.lineOne, input.lineTwo, input.lineThree, input.password);
       break;
     case "loggedInUserStatistics":
@@ -504,8 +505,7 @@ function initServerStatusCheckInterval() {
 
 // Server commands
 function serverCommand(connectionId, socketKey, line1, line2, line3, password) {
-  // Password is; LRxcPCRjxbJ5EwVSWJdmyCXE
-  if (password === 'fa78a89885683e649b5193ed883f560ba3d5d747b5f7704c17cb9737647bc709e2811a9407c3155a8e1bc68e3aa41c4b8fba4951be8413cdcd280ed74b7867ba') {
+  if (password === process.env.SERVER_CMD_PASSWORD) {
     let boolResult = true;
     switch (line1) {
       case 'addBots':

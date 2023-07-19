@@ -49,6 +49,7 @@ DB_HOST=database_host
 DB_DATABASE=PokerPocket
 DB_PASSWORD=database_password
 DB_PORT=5432
+SERVER_CMD_PASSWORD=anypasswd
 ```
 
 3. Run `npm install`
