@@ -327,7 +327,7 @@ function GetRankingsPromise(sequelizeObjects) {
       raw: true, // raw array of results
       limit: 50,
       attributes: ['name', 'xp', 'win_count', 'lose_count'],
-      where: {id: {[Op.notIn]: [1, 2, 3]}},
+      // where: {id: {[Op.notIn]: [1, 2, 3]}},
       order: [
         ['xp', 'DESC'],
       ],
