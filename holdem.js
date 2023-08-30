@@ -115,13 +115,19 @@ function messageHandler(input) {
       getRoomParameters(input.connectionId, input.socketKey, input.roomId);
       break;
     case "setFold":
-      rooms[input.roomId].playerFold(input.connectionId, input.socketKey);
+      if (isValidInput(input, true)) {
+        rooms[input.roomId].playerFold(input.connectionId, input.socketKey);
+      }
       break;
     case "setCheck":
-      rooms[input.roomId].playerCheck(input.connectionId, input.socketKey);
+      if (isValidInput(input, true)) {
+        rooms[input.roomId].playerCheck(input.connectionId, input.socketKey);
+      }
       break;
     case "setRaise":
-      rooms[input.roomId].playerRaise(input.connectionId, input.socketKey, input.amount);
+      if (isValidInput(input, true)) {
+        rooms[input.roomId].playerRaise(input.connectionId, input.socketKey, input.amount);
+      }
       break;
     case "getSpectateRooms":
       onRequestSpectateRooms(input.connectionId, input.socketKey, input.roomId);
@@ -231,15 +237,13 @@ function onRequestSpectateRooms(connectionId, socketKey, roomId) {
 
 // Player selected room to play in
 function onPlayerSelectRoom(connectionId, socketKey, roomId) {
-  if (players[connectionId].connection != null) {
-    if (players[connectionId].socketKey === socketKey) {
-      if ((rooms[roomId].players.length + rooms[roomId].playersToAppend.length) < config.games.holdEm.holdEmGames[rooms[roomId].holdemType].max_seats) {
-        players[connectionId].connection.selectedRoomId = roomId; // Also set room id into connection object
-        players[connectionId].selectedRoomId = roomId;
-        rooms[roomId].playersToAppend.push(players[connectionId]);
-        logger.log(players[connectionId].playerName + " selected room " + roomId);
-        rooms[roomId].triggerNewGame();
-      }
+  if (isValidInput({connectionId, socketKey, roomId}, true)) {
+    if ((rooms[roomId].players.length + rooms[roomId].playersToAppend.length) < config.games.holdEm.holdEmGames[rooms[roomId].holdemType].max_seats) {
+      players[connectionId].connection.selectedRoomId = roomId; // Also set room id into connection object
+      players[connectionId].selectedRoomId = roomId;
+      rooms[roomId].playersToAppend.push(players[connectionId]);
+      logger.log(players[connectionId].playerName + " selected room " + roomId);
+      rooms[roomId].triggerNewGame();
     }
   }
 }
@@ -247,7 +251,7 @@ function onPlayerSelectRoom(connectionId, socketKey, roomId) {
 
 // Push spectator on selected room
 function onPlayerSelectSpectateRoom(connectionId, socketKey, roomId) {
-  if (players[connectionId].connection != null && players[connectionId].socketKey === socketKey) {
+  if (isValidInput({connectionId, socketKey, roomId}, true)) {
     players[connectionId].connection.selectedRoomId = roomId; // Also set room id into connection object
     players[connectionId].selectedRoomId = roomId;
     rooms[roomId].spectators.push(players[connectionId]);
@@ -258,7 +262,7 @@ function onPlayerSelectSpectateRoom(connectionId, socketKey, roomId) {
 
 // Player select's room and gets room parameters with this function
 function getRoomParameters(connectionId, socketKey, roomId) {
-  if (players[connectionId].socketKey === socketKey) {
+  if (isValidInput({connectionId, socketKey, roomId}, true)) {
     players[connectionId].connection.sendText(JSON.stringify(rooms[roomId].getRoomParams()));
   }
 }
@@ -266,7 +270,7 @@ function getRoomParameters(connectionId, socketKey, roomId) {
 
 // Game information
 function onGetGameInformation(connectionId, socketKey) {
-  if (players[connectionId].socketKey === socketKey) {
+  if (isValidInput({connectionId, socketKey})) {
     responseArray.key = "getGameInformation";
     responseArray.data = {};
     responseArray.data.roomCount = rooms.length;
@@ -442,6 +446,9 @@ function checkRooms() {
 
 // Append new bot on selected room
 function onAppendBot(roomId) {
+  if (!rooms[roomId]) {
+    return;
+  }
   if (Number(rooms[roomId].playersToAppend.length + rooms[roomId].players.length) < Number(config.games.holdEm.holdEmGames[rooms[roomId].holdemType].max_seats)) {
     const connectionId = CONNECTION_ID;
     players.push(new player.Player(-1, null, connectionId, config.games.holdEm.bot.startMoney, true));
@@ -524,154 +531,141 @@ function serverCommand(connectionId, socketKey, line1, line2, line3, password) {
 
 // Send command back as response of successful run
 function serverCommandResult(connectionId, socketKey, boolResult, line1) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      responseArray.key = "serverCommandResult";
-      responseArray.data = {boolResult: boolResult, command: line1};
-      players[connectionId].connection.sendText(JSON.stringify(responseArray));
-      cleanResponseArray();
-    }
+  if (isValidInput({connectionId, socketKey})) {
+    responseArray.key = "serverCommandResult";
+    responseArray.data = {boolResult: boolResult, command: line1};
+    players[connectionId].connection.sendText(JSON.stringify(responseArray));
+    cleanResponseArray();
   }
 }
 
 
 // Create player account (SHA3-512 password)
 function createAccount(connectionId, socketKey, name, password, email) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.CreateAccountPromise(sequelizeObjects, name, password, email).then(result => {
-        if (players[connectionId].connection !== null) {
-          responseArray.key = "accountCreated";
-          responseArray.data = result;
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey})) {
+    dbUtils.CreateAccountPromise(sequelizeObjects, name, password, email).then(result => {
+      if (players[connectionId].connection !== null) {
+        responseArray.key = "accountCreated";
+        responseArray.data = result;
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   }
 }
 
 // Login for user account (SHA3-512 password)
 function userLogin(connectionId, socketKey, username, password) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.LoginPromise(sequelizeObjects, username, password).then(result => {
-        if (players[connectionId].connection !== null) {
-          responseArray.key = "loginResult";
-          responseArray.data = result;
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey})) {
+    dbUtils.LoginPromise(sequelizeObjects, username, password).then(result => {
+      if (players[connectionId].connection !== null) {
+        responseArray.key = "loginResult";
+        responseArray.data = result;
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   }
 }
 
 
 // Set logged in user parameters
 function setLoggedInUserParameters(connectionId, socketKey, username, password) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.GetLoggedInUserParametersPromise(sequelizeObjects, username, password).then(result => {
-        let valid = true;
-        for (let i = 0; i < players.length; i++) {
-          if (players[i].playerDatabaseId === result.id) {
-            if (players[i].connection != null && players[i].isLoggedInPlayer()) {
-              valid = false;
-            }
+  if (isValidInput({connectionId, socketKey})) {
+    dbUtils.GetLoggedInUserParametersPromise(sequelizeObjects, username, password).then(result => {
+      let valid = true;
+      for (let i = 0; i < players.length; i++) {
+        if (players[i].playerDatabaseId === result.id) {
+          if (players[i].connection != null && players[i].isLoggedInPlayer()) {
+            valid = false;
           }
         }
-        if (valid) {
-          // ----> see this part, is it working properly?
-          players[connectionId].playerDatabaseId = result.id;
-          players[connectionId].playerName = result.name;
-          players[connectionId].playerMoney = result.money;
-          players[connectionId].playerWinCount = result.win_count;
-          players[connectionId].playerLoseCount = result.lose_count;
-          responseArray.key = "loggedInUserParamsResult";
-          responseArray.data = {result: true, moneyLeft: result.money};
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        } else {
-          responseArray.key = "loggedInUserParamsResult";
-          responseArray.data = {result: false, moneyLeft: -1};
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+      }
+      if (valid) {
+        // ----> see this part, is it working properly?
+        players[connectionId].playerDatabaseId = result.id;
+        players[connectionId].playerName = result.name;
+        players[connectionId].playerMoney = result.money;
+        players[connectionId].playerWinCount = result.win_count;
+        players[connectionId].playerLoseCount = result.lose_count;
+        responseArray.key = "loggedInUserParamsResult";
+        responseArray.data = {result: true, moneyLeft: result.money};
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      } else {
+        responseArray.key = "loggedInUserParamsResult";
+        responseArray.data = {result: false, moneyLeft: -1};
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   }
 }
 
 
 // Get logged in user statistics
 function loggedInUserStatistics(connectionId, socketKey) {
-  if (players[connectionId].connection !== null && players[connectionId].isLoggedInPlayer()) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.GetLoggedInUserStatisticsPromise(sequelizeObjects, players[connectionId].playerDatabaseId).then(result => {
-        if (players[connectionId].connection !== null) {
-          let xpMedalIconAndNextMedalXP = utils.getMedalIconAndNextMedalXP(result.xp);
-          const xpNeededForNextMedal = (xpMedalIconAndNextMedalXP.nextMedalXP - result.xp);
-          responseArray.key = "loggedInUserStatisticsResults";
-          responseArray.data = {
-            name: result.name,
-            money: result.money,
-            winCount: result.win_count,
-            loseCount: result.lose_count,
-            xp: result.xp,
-            icon: xpMedalIconAndNextMedalXP.image,
-            xpNeededForNextMedal: xpNeededForNextMedal,
-            achievements: [],
-            havingMedals: xpMedalIconAndNextMedalXP.havingMedals
-          };
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey}) && players[connectionId].isLoggedInPlayer()) {
+    dbUtils.GetLoggedInUserStatisticsPromise(sequelizeObjects, players[connectionId].playerDatabaseId).then(result => {
+      if (players[connectionId].connection !== null) {
+        let xpMedalIconAndNextMedalXP = utils.getMedalIconAndNextMedalXP(result.xp);
+        const xpNeededForNextMedal = (xpMedalIconAndNextMedalXP.nextMedalXP - result.xp);
+        responseArray.key = "loggedInUserStatisticsResults";
+        responseArray.data = {
+          name: result.name,
+          money: result.money,
+          winCount: result.win_count,
+          loseCount: result.lose_count,
+          xp: result.xp,
+          icon: xpMedalIconAndNextMedalXP.image,
+          xpNeededForNextMedal: xpNeededForNextMedal,
+          achievements: [],
+          havingMedals: xpMedalIconAndNextMedalXP.havingMedals
+        };
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   }
 }
 
 
 // Give user more money (rewarding ad shown)
 function rewardingAdShown(connectionId, socketKey) {
-  if (players[connectionId].connection !== null && players[connectionId].isLoggedInPlayer()) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.UpdatePlayerRewardingAdShownPromise(sequelizeObjects, players[connectionId].playerDatabaseId).then(result => {
-        if (players[connectionId].connection !== null && result.result) {
-          responseArray.key = "rewardingAdShownServerResult";
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey}) && players[connectionId].isLoggedInPlayer()) {
+    dbUtils.UpdatePlayerRewardingAdShownPromise(sequelizeObjects, players[connectionId].playerDatabaseId).then(result => {
+      if (players[connectionId].connection !== null && result.result) {
+        responseArray.key = "rewardingAdShownServerResult";
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   }
 }
 
 
 // Get rankings of best players
 function getRankings(connectionId, socketKey) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.GetRankingsPromise(sequelizeObjects).then(result => {
-        if (players[connectionId].connection !== null) {
-          responseArray.key = "getRankingsResult";
-          responseArray.code = 200;
-          responseArray.data = utils.fetchRanksMedals(result.ranks);
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey})) {
+    dbUtils.GetRankingsPromise(sequelizeObjects).then(result => {
+      if (players[connectionId].connection !== null) {
+        responseArray.key = "getRankingsResult";
+        responseArray.code = 200;
+        responseArray.data = utils.fetchRanksMedals(result.ranks);
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   } else {
     responseArray.key = "getRankingsResult";
     responseArray.code = 500;
+    // @TODO crash on players[connectionId].connection === null
     players[connectionId].connection.sendText(JSON.stringify(responseArray));
     cleanResponseArray();
   }
@@ -726,22 +720,21 @@ function autoPlayAction(connectionId, socketKey) {
 
 // Get rankings of best players
 function getPlayerChartData(connectionId, socketKey) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.GetPlayerChartDataPromise(sequelizeObjects, players[connectionId].playerDatabaseId).then(results => {
-        if (players[connectionId].connection !== null) {
-          responseArray.key = "getPlayerChartDataResult";
-          responseArray.code = 200;
-          responseArray.data = results.ranks;
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey})) {
+    dbUtils.GetPlayerChartDataPromise(sequelizeObjects, players[connectionId].playerDatabaseId).then(results => {
+      if (players[connectionId].connection !== null) {
+        responseArray.key = "getPlayerChartDataResult";
+        responseArray.code = 200;
+        responseArray.data = results.ranks;
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   } else {
     responseArray.key = "getPlayerChartDataResult";
     responseArray.code = 500;
+    // @TODO crash on players[connectionId].connection === null
     players[connectionId].connection.sendText(JSON.stringify(responseArray));
     cleanResponseArray();
   }
@@ -750,20 +743,19 @@ function getPlayerChartData(connectionId, socketKey) {
 
 // Special function for development
 function getSelectedPlayerChartData(connectionId, socketKey, playerId) {
-  if (players[connectionId].connection !== null) {
-    if (players[connectionId].socketKey === socketKey) {
-      dbUtils.GetPlayerChartDataPromise(sequelizeObjects, playerId).then(results => {
-        if (players[connectionId].connection !== null) {
-          responseArray.key = "getPlayerChartDataResult";
-          responseArray.code = 200;
-          responseArray.data = results.ranks;
-          players[connectionId].connection.sendText(JSON.stringify(responseArray));
-          cleanResponseArray();
-        }
-      }).catch(() => {
-      });
-    }
+  if (isValidInput({connectionId, socketKey})) {
+    dbUtils.GetPlayerChartDataPromise(sequelizeObjects, playerId).then(results => {
+      if (players[connectionId].connection !== null) {
+        responseArray.key = "getPlayerChartDataResult";
+        responseArray.code = 200;
+        responseArray.data = results.ranks;
+        players[connectionId].connection.sendText(JSON.stringify(responseArray));
+        cleanResponseArray();
+      }
+    }).catch(() => {
+    });
   } else {
+    // @TODO crash on players[connectionId].connection === null
     responseArray.key = "getPlayerChartDataResult";
     responseArray.code = 500;
     players[connectionId].connection.sendText(JSON.stringify(responseArray));
@@ -773,6 +765,27 @@ function getSelectedPlayerChartData(connectionId, socketKey, playerId) {
 
 
 // ---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @param {object} input
+ * @param {number|null} input.connectionId
+ * @param input.socketKey
+ * @param {number} [input.roomId]
+ * @param {boolean} [validateRoomId]
+ * @return {boolean}
+ */
+function isValidInput({connectionId, socketKey, roomId}, validateRoomId) {
+  if (players[connectionId].connection === null) {
+    return false;
+  }
+  if (players[connectionId].socketKey !== socketKey) {
+    return false;
+  }
+  if (validateRoomId && !rooms[roomId]) {
+    return false;
+  }
+  return true;
+}
 
 function cleanResponseArray() {
   responseArray = {key: "", code: 200, data: []};
