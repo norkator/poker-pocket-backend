@@ -620,7 +620,7 @@ Room.prototype.bettingRoundTimer = function (current_player_turn) {
     if (_this.players[current_player_turn] !== null) {
       if (_this.players[current_player_turn].playerState === player.Player.PLAYER_STATE_NON) {
         turnTime = turnTime + 1000;
-        _this.players[current_player_turn].playerTimeBar = (((timeOut - turnTime) / 100) / 2);
+        _this.players[current_player_turn].playerTimeBar = (timeOut - turnTime) / timeOut * 100;
       } else {
         _this.clearTimers();
         _this.bettingRound(current_player_turn + 1);
