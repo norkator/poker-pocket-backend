@@ -18,5 +18,8 @@
     "poker-odds": "1.0.1",
     "pokersolver": "2.1.4",
     "sequelize": "6.32.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
