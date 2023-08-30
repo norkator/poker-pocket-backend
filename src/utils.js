@@ -10,7 +10,7 @@ dotEnv.config();
  * @constructor
  */
 exports.GetCertOptions = function () {
-  if (config.isDev) {
+  if (!config.server.secure) {
     return {
       secure: false,
     };
