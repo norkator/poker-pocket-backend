@@ -662,12 +662,6 @@ function getRankings(connectionId, socketKey) {
       }
     }).catch(() => {
     });
-  } else {
-    responseArray.key = "getRankingsResult";
-    responseArray.code = 500;
-    // @TODO crash on players[connectionId].connection === null
-    players[connectionId].connection.sendText(JSON.stringify(responseArray));
-    cleanResponseArray();
   }
 }
 
@@ -731,12 +725,6 @@ function getPlayerChartData(connectionId, socketKey) {
       }
     }).catch(() => {
     });
-  } else {
-    responseArray.key = "getPlayerChartDataResult";
-    responseArray.code = 500;
-    // @TODO crash on players[connectionId].connection === null
-    players[connectionId].connection.sendText(JSON.stringify(responseArray));
-    cleanResponseArray();
   }
 }
 
@@ -754,12 +742,6 @@ function getSelectedPlayerChartData(connectionId, socketKey, playerId) {
       }
     }).catch(() => {
     });
-  } else {
-    // @TODO crash on players[connectionId].connection === null
-    responseArray.key = "getPlayerChartDataResult";
-    responseArray.code = 500;
-    players[connectionId].connection.sendText(JSON.stringify(responseArray));
-    cleanResponseArray();
   }
 }
 
