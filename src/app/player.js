@@ -22,7 +22,7 @@ function Player(conn, socketKey, connection_id, player_money, isBot) {
   this.totalBet = 0;
   this.isDealer = false;
   this.isPlayerTurn = false;
-  this.playerTimeBar = 100;
+  this.playerTimeLeft = 0;
   this.isFold = false;
   this.isAllIn = false;
   this.roundPlayed = false;
@@ -38,7 +38,7 @@ Player.prototype.resetParams = function () {
   this.playerCards = [];
   this.totalBet = 0;
   this.isPlayerTurn = false;
-  this.playerTimeBar = 0;
+  this.playerTimeLeft = 0;
   this.isFold = false;
   this.isAllIn = false;
   this.handValue = 0;
@@ -80,21 +80,21 @@ Player.prototype.setStateNon = function () {
 Player.prototype.setStateFold = function () {
   this.playerState = Player.PLAYER_STATE_FOLD;
   this.isFold = true;
-  this.playerTimeBar = 0;
+  this.playerTimeLeft = 0;
   this.isPlayerTurn = false;
   this.roundPlayed = true;
 };
 
 Player.prototype.setStateCheck = function () {
   this.playerState = Player.PLAYER_STATE_CHECK;
-  this.playerTimeBar = 0;
+  this.playerTimeLeft = 0;
   this.isPlayerTurn = false;
   this.roundPlayed = true;
 };
 
 Player.prototype.setStateRaise = function () {
   this.playerState = Player.PLAYER_STATE_RAISE;
-  this.playerTimeBar = 0;
+  this.playerTimeLeft = 0;
   this.isPlayerTurn = false;
   this.roundPlayed = true;
 };
