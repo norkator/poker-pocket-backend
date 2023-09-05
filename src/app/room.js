@@ -49,6 +49,7 @@ function Room(holdemType, number, eventEmitter, sequelizeObjects) {
   this.roomName = 'Room ' + number;
   this.maxSeats = config.games.holdEm.holdEmGames[holdemType].max_seats;
   this.minPlayers = config.games.holdEm.holdEmGames[holdemType].minPlayers;
+  this.turnTimeOut = config.games.holdEm.holdEmGames[holdemType].turnCountdown * 1000;
   this.currentStage = Room.HOLDEM_STAGE_ONE_HOLE_CARDS;
   this.holeCardsGiven = false;
   this.totalPot = 0;
@@ -613,14 +614,13 @@ Room.prototype.bettingRound = function (current_player_turn) {
 };
 
 Room.prototype.bettingRoundTimer = function (current_player_turn) {
-  let timeOut = config.games.holdEm.holdEmGames[this.holdemType].turnCountdown * 1000;
   let turnTime = 0;
   const _this = this;
   this.turnIntervalObj = setInterval(function () {
     if (_this.players[current_player_turn] !== null) {
       if (_this.players[current_player_turn].playerState === player.Player.PLAYER_STATE_NON) {
         turnTime = turnTime + 1000;
-        _this.players[current_player_turn].playerTimeBar = (timeOut - turnTime) / timeOut * 100;
+        _this.players[current_player_turn].playerTimeLeft = _this.turnTimeOut - turnTime;
       } else {
         _this.clearTimers();
         _this.bettingRound(current_player_turn + 1);
@@ -635,7 +635,7 @@ Room.prototype.bettingRoundTimer = function (current_player_turn) {
       _this.playerFold(_this.players[current_player_turn].playerId, _this.players[current_player_turn].socketKey);
     _this.clearTimers();
     _this.bettingRound(current_player_turn + 1);
-  }, (config.games.holdEm.holdEmGames[this.holdemType].turnCountdown * 1000) + 200);
+  }, _this.turnTimeOut + 200);
 };
 
 // *********************************************************************************************************************
@@ -673,7 +673,8 @@ Room.prototype.sendStatusUpdate = function () {
     playerData.totalBet = this.players[i].totalBet;
     playerData.isPlayerTurn = this.players[i].isPlayerTurn;
     playerData.isFold = this.players[i].isFold;
-    playerData.timeBar = this.players[i].playerTimeBar;
+    playerData.timeLeft = this.players[i].playerTimeLeft;
+    playerData.timeBar = this.players[i].playerTimeLeft / this.turnTimeOut * 100;
     response.data.playersData[i] = playerData;
   }
   response.data.roomName = this.roomName; // Room name
