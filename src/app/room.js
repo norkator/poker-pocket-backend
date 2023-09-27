@@ -571,6 +571,7 @@ Room.prototype.bettingRound = function (current_player_turn) {
           //this.bettingRound(noRoundPlayedPlayer);
           // --- going into testing ---
           this.players[noRoundPlayedPlayer].isPlayerTurn = true;
+          this.players[noRoundPlayedPlayer].playerTimeLeft = this.turnTimeOut;
           this.currentTurnText = '' + this.players[noRoundPlayedPlayer].playerName + ' Turn';
           this.sendStatusUpdate();
 
@@ -599,7 +600,9 @@ Room.prototype.bettingRound = function (current_player_turn) {
             if (verifyBets !== -1 || !this.smallBlindGiven || !this.bigBlindGiven) {
               this.isCallSituation = true;
             }
+            // player's turn
             this.players[current_player_turn].isPlayerTurn = true;
+            this.players[current_player_turn].playerTimeLeft = this.turnTimeOut;
             this.currentTurnText = '' + this.players[current_player_turn].playerName + ' Turn';
             this.sendStatusUpdate();
 
