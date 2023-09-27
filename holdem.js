@@ -117,16 +117,19 @@ function messageHandler(input) {
     case "setFold":
       if (isValidInput(input, true)) {
         rooms[input.roomId].playerFold(input.connectionId, input.socketKey);
+        rooms[input.roomId].sendStatusUpdate();
       }
       break;
     case "setCheck":
       if (isValidInput(input, true)) {
         rooms[input.roomId].playerCheck(input.connectionId, input.socketKey);
+        rooms[input.roomId].sendStatusUpdate();
       }
       break;
     case "setRaise":
       if (isValidInput(input, true)) {
         rooms[input.roomId].playerRaise(input.connectionId, input.socketKey, input.amount);
+        rooms[input.roomId].sendStatusUpdate();
       }
       break;
     case "getSpectateRooms":

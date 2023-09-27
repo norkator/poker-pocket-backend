@@ -67,9 +67,9 @@ function Room(holdemType, number, eventEmitter, sequelizeObjects) {
   this.gameStarted = false;
   this.turnTimeOutObj = null; // Active players timeout
   this.turnIntervalObj = null;
-  this.statusUpdateIntervalObj = null;
   this.updateJsonTemp = null;
   this.current_player_turn = 0;
+  this.currentTurnText = '';
   this.currentHighestBet = 0;
   this.isCallSituation = false;
   this.isResultsCall = false; // True means update on client visual side
@@ -92,9 +92,6 @@ exports.Room = Room;
 
 // Run before each new round
 Room.prototype.resetRoomParams = function () {
-  if (this.statusUpdateIntervalObj != null) {
-    clearInterval(this.statusUpdateIntervalObj);
-  }
   this.currentStage = Room.HOLDEM_STAGE_ONE_HOLE_CARDS;
   this.holeCardsGiven = false;
   this.totalPot = 0;
@@ -227,9 +224,7 @@ Room.prototype.newGame = function () {
   this.deck = poker.visualize(poker.randomize(poker.newSet()));
   this.deckSize = this.deck.length;
   this.deckCard = 0;
-  this.statusUpdateIntervalObj = setInterval(function () {
-    _this.sendStatusUpdate();
-  }, 1000);
+  this.sendStatusUpdate();
   setTimeout(function () {
     _this.staging();
   }, 1000)
@@ -239,6 +234,7 @@ Room.prototype.staging = function () {
   switch (this.currentStage) {
     case Room.HOLDEM_STAGE_ONE_HOLE_CARDS: // Give cards
       this.currentStatusText = 'Hole cards';
+      this.currentTurnText = '';
       this.burnCard(); // Burn one card before dealing cards
       this.holeCards();
       break;
@@ -248,16 +244,19 @@ Room.prototype.staging = function () {
       this.resetPlayerStates();
       this.resetRoundParameters();
       this.current_player_turn = this.smallBlindPlayerArrayIndex; // Round starting player is always small blind player
+      this.currentTurnText = '';
       this.currentHighestBet = 0;
       this.bettingRound(this.smallBlindPlayerArrayIndex); // this.bettingRound(this.current_player_turn);
       break;
     case Room.HOLDEM_STAGE_THREE_THE_FLOP: // Show three middle cards
       this.currentStatusText = 'The flop';
+      this.currentTurnText = '';
       this.burnCard(); // Burn one card before dealing cards
       this.theFlop();
       break;
     case Room.HOLDEM_STAGE_FOUR_POST_FLOP: // Second betting round
       this.currentStatusText = 'Post flop';
+      this.currentTurnText = '';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -267,11 +266,13 @@ Room.prototype.staging = function () {
       break;
     case Room.HOLDEM_STAGE_FIVE_THE_TURN: // Show fourth card
       this.currentStatusText = 'The turn';
+      this.currentTurnText = '';
       this.burnCard(); // Burn one card before dealing cards
       this.theTurn();
       break;
     case Room.HOLDEM_STAGE_SIX_THE_POST_TURN: // Third betting round
       this.currentStatusText = 'Post turn';
+      this.currentTurnText = '';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -281,11 +282,13 @@ Room.prototype.staging = function () {
       break;
     case Room.HOLDEM_STAGE_SEVEN_THE_RIVER: // Show fifth card
       this.currentStatusText = 'The river';
+      this.currentTurnText = '';
       this.burnCard(); // Burn one card before dealing cards
       this.theRiver();
       break;
     case Room.HOLDEM_STAGE_EIGHT_THE_SHOW_DOWN: // Fourth and final betting round
       this.currentStatusText = 'The show down';
+      this.currentTurnText = '';
       this.isCallSituation = false; // Room related reset
       this.resetPlayerStates();
       this.resetRoundParameters();
@@ -301,7 +304,11 @@ Room.prototype.staging = function () {
       logger.log('-------- Results : ' + this.roomName + ' --------');
       this.roundResultsEnd();
       break;
+    default:
+      return;
   }
+
+  this.sendStatusUpdate();
 };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -524,6 +531,7 @@ Room.prototype.roundResultsMiddleOfTheGame = function () {
     this.collectingPot = false;
     this.players[winnerPlayer].playerMoney = this.players[winnerPlayer].playerMoney + this.totalPot;
     this.currentStatusText = this.players[winnerPlayer].playerName + ' is only standing player!';
+    this.currentTurnText = '';
     this.isResultsCall = true;
     this.updateLoggedInPlayerDatabaseStatistics([winnerPlayer], this.lastWinnerPlayers);
     this.lastWinnerPlayers = [winnerPlayer]; // Take new reference of winner player
@@ -563,6 +571,9 @@ Room.prototype.bettingRound = function (current_player_turn) {
           //this.bettingRound(noRoundPlayedPlayer);
           // --- going into testing ---
           this.players[noRoundPlayedPlayer].isPlayerTurn = true;
+          this.currentTurnText = '' + this.players[noRoundPlayedPlayer].playerName + ' Turn';
+          this.sendStatusUpdate();
+
           if (this.players[noRoundPlayedPlayer].isBot) {
             this.botActionHandler(noRoundPlayedPlayer);
           }
@@ -589,6 +600,9 @@ Room.prototype.bettingRound = function (current_player_turn) {
               this.isCallSituation = true;
             }
             this.players[current_player_turn].isPlayerTurn = true;
+            this.currentTurnText = '' + this.players[current_player_turn].playerName + ' Turn';
+            this.sendStatusUpdate();
+
             if (this.players[current_player_turn].isBot) {
               this.botActionHandler(current_player_turn);
             }
@@ -659,6 +673,7 @@ Room.prototype.sendStatusUpdate = function () {
   response.key = 'statusUpdate';
   response.data.totalPot = this.totalPot;
   response.data.currentStatus = this.currentStatusText;
+  response.data.currentTurnText = this.currentTurnText;
   response.data.middleCards = this.middleCards;
   response.data.playersData = [];
   response.data.isCallSituation = this.isCallSituation;
@@ -696,9 +711,6 @@ Room.prototype.sendStatusUpdate = function () {
     for (let s = 0; s < this.spectators.length; s++) {
       this.sendSpectatorWebSocketData(s, response);
     }
-  }
-  if (this.isResultsCall) {
-    clearInterval(this.statusUpdateIntervalObj);
   }
 };
 
@@ -1278,7 +1290,7 @@ Room.prototype.botActionHandler = function (current_player_turn) {
     this.players[current_player_turn].totalBet
   );
   let resultSet = botObj.performAction();
-  let tm = new setTimeout(function () {
+  let tm = setTimeout(function () {
     switch (resultSet.action) {
       case 'bot_fold':
         _this.playerFold(playerId);
@@ -1300,6 +1312,8 @@ Room.prototype.botActionHandler = function (current_player_turn) {
         _this.playerCheck(playerId);
         break;
     }
+    _this.sendStatusUpdate();
+
     clearTimeout(tm);
   }, config.games.holdEm.bot.turnTimes[utils.getRandomInt(1, 4)]);
 };
