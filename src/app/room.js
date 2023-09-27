@@ -648,8 +648,10 @@ Room.prototype.bettingRoundTimer = function (current_player_turn) {
     }
   }, 1000);
   this.turnTimeOutObj = setTimeout(function () {
-    if (_this.players[current_player_turn].playerState === player.Player.PLAYER_STATE_NON)
+    if (_this.players[current_player_turn].playerState === player.Player.PLAYER_STATE_NON) {
       _this.playerFold(_this.players[current_player_turn].playerId, _this.players[current_player_turn].socketKey);
+      _this.sendStatusUpdate();
+    }
     _this.clearTimers();
     _this.bettingRound(current_player_turn + 1);
   }, _this.turnTimeOut + 200);
