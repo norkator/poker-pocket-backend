@@ -21,14 +21,11 @@ I may however sometimes check this repository out to update dependencies.
 Here's list of different front end clients. You may want to take a look at them to
 see what it's all about.
 
-Sample Web UI: https://pokerpocket.nitramite.com/  
-Sample Web UI source: https://github.com/norkator/Poker-Pocket-Web-Client  
-Android client: https://play.google.com/store/apps/details?id=com.nitramite.pokerpocket
-
-Web UI React version: https://github.com/linus2code/poker-pocket-react-client (created
-by [linus2code](https://github.com/linus2code))
-
-This web ui can be used for testing this back end. See instructions below.
+* Sample Web UI: https://pokerpocket.nitramite.com/
+  * Sample Web UI source: https://github.com/norkator/Poker-Pocket-Web-Client
+* Android client: https://play.google.com/store/apps/details?id=com.nitramite.pokerpocket
+* Web UI React version: https://github.com/linus2code/poker-pocket-react-client (created
+  by [linus2code](https://github.com/linus2code))
 
 ### Prerequisites
 
