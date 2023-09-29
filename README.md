@@ -18,12 +18,15 @@ I may however sometimes check this repository out to update dependencies.
 
 ### Testing it out
 
-I currently have two different front end clients. You may want to take a look at them to
+Here's list of different front end clients. You may want to take a look at them to
 see what it's all about.
 
-Web UI: https://pokerpocket.nitramite.com/  
-Web UI source: https://github.com/norkator/Poker-Pocket-Web-Client  
+Sample Web UI: https://pokerpocket.nitramite.com/  
+Sample Web UI source: https://github.com/norkator/Poker-Pocket-Web-Client  
 Android client: https://play.google.com/store/apps/details?id=com.nitramite.pokerpocket
+
+Web UI React version: https://github.com/linus2code/poker-pocket-react-client (created
+by [linus2code](https://github.com/linus2code))
 
 This web ui can be used for testing this back end. See instructions below.
 
@@ -98,6 +101,17 @@ This back end come by default with  `pg` and `pg-hstore` for Postgres.
 ## Authors
 
 * **Martin K.** - *Initial work* - [norkator](https://github.com/norkator)
+
+## Contributors
+
+### [shrpne](https://github.com/shrpne)
+
+* [Commits](https://github.com/norkator/poker-pocket-backend/commits?author=shrpne)
+
+### [linus2code](https://github.com/linus2code)
+
+* [Commits](https://github.com/norkator/poker-pocket-backend/commits?author=linus2code)
+* Created [React version](https://github.com/linus2code/poker-pocket-react-client) of Web UI
 
 ## License
 
