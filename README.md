@@ -22,8 +22,9 @@ Here's list of different front end clients. You may want to take a look at them 
 see what it's all about.
 
 * Sample Web UI: https://pokerpocket.nitramite.com/
-  * Sample Web UI source: https://github.com/norkator/Poker-Pocket-Web-Client
+  * Sample Web UI source code: https://github.com/norkator/Poker-Pocket-Web-Client
 * Android client: https://play.google.com/store/apps/details?id=com.nitramite.pokerpocket
+  * Android client source code: https://github.com/norkator/poker-pocket-android
 * Web UI React version: https://github.com/linus2code/poker-pocket-react-client (created
   by [linus2code](https://github.com/linus2code))
 
