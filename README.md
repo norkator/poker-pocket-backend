@@ -1,3 +1,8 @@
+# ⚠️ ARCHIVED ⚠️
+
+Use this typescript version instead: https://github.com/norkator/poker-pocket-ts-backend
+
+
 ![poker_pocket_promo](./images/poker_pocket.png)
 
 # Poker Pocket Backend
